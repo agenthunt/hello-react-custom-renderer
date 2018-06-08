@@ -23,6 +23,30 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.decrement-button {
+  font-size: 24px;
+  width: 60px;
+}
+
+.increment-button {
+  font-size: 24px;
+  width: 60px;
+}
+
+.counter-text {
+  font-size: 24px;
+  margin: 10px;
 }

@@ -28,8 +28,27 @@ const hostConfig = {
   shouldSetTextContent: (type, props) => {
     return typeof props.children === 'string' || typeof props.children === 'number';
   },
+  /**
+   This is where react-reconciler wants to create an instance of UI element in terms of the target. Since our target here is the DOM, we will create document.createElement and type is the argument that contains the type string like div or img or h1 etc. The initial values of domElement attributes can be set in this function from the newProps argument
+   */
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
-    return document.createElement(type);
+    const domElement = document.createElement(type);
+    Object.keys(newProps).forEach(propName => {
+      const propValue = newProps[propName];
+      if (propName === 'children') {
+        if (typeof propValue === 'string' || typeof propValue === 'number') {
+          domElement.textContent = propValue;
+        }
+      } else if (propName === 'onClick') {
+        domElement.addEventListener('click', propValue);
+      } else if (propName === 'className') {
+        domElement.setAttribute('class', propValue);
+      } else {
+        const propValue = newProps[propName];
+        domElement.setAttribute(propName, propValue);
+      }
+    });
+    return domElement;
   },
   createTextInstance: text => {
     return document.createTextNode(text);
@@ -40,24 +59,7 @@ const hostConfig = {
   appendChild(parent, child) {
     parent.appendChild(child);
   },
-  finalizeInitialChildren: (domElement, type, props) => {
-    Object.keys(props).forEach(propName => {
-      const propValue = props[propName];
-      if (propName === 'children') {
-        if (typeof propValue === 'string' || typeof propValue === 'number') {
-          domElement.textContent = propValue;
-        }
-      } else if (propName === 'onClick') {
-        domElement.addEventListener('click', propValue);
-      } else if (propName === 'className') {
-        domElement.setAttribute('class', propValue);
-      } else {
-        const propValue = props[propName];
-        domElement.setAttribute(propName, propValue);
-      }
-    });
-    return false;
-  },
+  finalizeInitialChildren: (domElement, type, props) => {},
   supportsMutation: true,
   appendChildToContainer: (parent, child) => {
     parent.appendChild(child);
